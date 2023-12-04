@@ -21,4 +21,9 @@ Still need to improve, so this is WIP project
 
 ![image](https://github.com/eternalowo/tracert-utility/assets/98911288/1e891abc-20a5-44ab-849b-ecdd884f2642)
 <br>
-(takes absolute value of -h parameter, same for timeout)
+(takes absolute value of -h parameter, same for timeout) <br>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/417c85fb-7877-44fd-a097-b73f0494f76a)
+<br>
+(it also can be stopped by typing Ctrl+C, it will stop tracing after sending last packages, that were formed before Ctrl+C signal)
+
