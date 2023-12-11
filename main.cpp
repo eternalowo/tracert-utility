@@ -6,9 +6,11 @@
 #include <ws2tcpip.h>
 #include <winsock2.h>
 
-#define MAX_HOPS          30
-#define ICMP_DATA_SIZE    32
-#define MAX_TIMEOUT       3000
+constexpr auto MAX_HOST_NAME = 1025;
+constexpr auto MAX_HOPS = 30;
+constexpr auto MAX_IP_LEN = 16;	
+constexpr auto ICMP_DATA_SIZE = 32;
+constexpr auto MAX_TIMEOUT = 3000;
 
 struct IP_OPTION_INFORMATION {
 	// ip option information structure from ipexport.h 
@@ -62,8 +64,9 @@ bool is_convertible_to_int(const char* str) {
 }
 
 inline void show_usage(char* path) {
-	std::cout << std::endl << "Usage: " << path << " target_name [-h maximum_hops] [-w timeout]" << std::endl << std::endl;
+	std::cout << std::endl << "Usage: " << path << " target_name [-d] [-h maximum_hops] [-w timeout]" << std::endl << std::endl;
 	std::cout << "Parameters: " << std::endl;
+	std::cout << "    -d             \tDo not resolve addresses to hostnames." << std::endl;
 	std::cout << "    -h maximum_hops\tMaximum number of hops to search for target." << std::endl;
 	std::cout << "    -w timeout\t\tTimeout in milliseconds to wait for each reply." << std::endl;
 };
@@ -74,8 +77,12 @@ int main(int argc, char* argv[]) {
 
 	// max hops count, set by '-h' flag
 	int hops = MAX_HOPS;
+
 	// max timeout in ms, set by '-w' flag
 	unsigned long timeout = MAX_TIMEOUT;
+
+	// bool value that shows if programm have to resolve domain name, set by '-d' flag
+	bool resolve_host = true;
 
 	// handling command prompt args
 	if (argc == 1) {
@@ -102,6 +109,9 @@ int main(int argc, char* argv[]) {
 				show_usage(argv[0]);
 				return 1;
 			}
+			if (strcmp(argv[i], "-d") == 0) {
+				resolve_host = false;
+			}
 		}
 	}
 	else if (argc != 2) {
@@ -117,10 +127,10 @@ int main(int argc, char* argv[]) {
 	}
 
 	// resolving IP by domain name
-	struct addrinfo hints;
+	addrinfo hints;
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = AF_INET;
-	struct addrinfo* result;
+	addrinfo* result;
 	if (getaddrinfo(argv[1], NULL, &hints, &result) != 0) {
 		std::cout << "Unable to resolve target system name " << argv[1] << std::endl;
 		WSACleanup();
@@ -175,6 +185,10 @@ int main(int argc, char* argv[]) {
 	unsigned long response;
 	unsigned long UL_IP;
 
+	sockaddr_in dest_ip;
+	char dest_host[MAX_HOST_NAME];
+	char dest_host_ip[MAX_IP_LEN];
+
 	// sending ICMP packets
 	while (hops--) {
 
@@ -212,11 +226,30 @@ int main(int argc, char* argv[]) {
 			std::cout << "\t*\t";
 		}
 
+		strcpy_s(dest_host_ip, inet_ntoa(*reinterpret_cast<in_addr*>(&UL_IP)));
+
 		if (UL_IP == INADDR_ANY) {
 			std::cout << "Request timed out" << std::endl;
 		}
+		else if (resolve_host) {
+			memset(&dest_ip, 0, sizeof(sockaddr_in));
+			dest_ip.sin_family = AF_INET;
+			dest_ip.sin_addr.S_un.S_addr = UL_IP;
+			dest_ip.sin_port = 0;
+			if (getnameinfo((struct sockaddr*)&dest_ip, sizeof(dest_ip), dest_host, sizeof(dest_host), NULL, 0, 0) == 0) {
+				if (strcmp(dest_host, dest_host_ip) == 0) {
+					std::cout << dest_host_ip << std::endl;
+				}
+				else {
+					std::cout << dest_host << " [" << dest_host_ip << "]" << std::endl;
+				}
+			}
+			else {
+				std::cout << dest_host_ip << std::endl;
+			}
+		}
 		else {
-			std::cout << inet_ntoa(*reinterpret_cast<in_addr*>(&UL_IP)) << std::endl;
+			std::cout << dest_host_ip << std::endl;
 		}
 
 		if (UL_IP == destination_ip) {
