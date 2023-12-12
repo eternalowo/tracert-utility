@@ -1,29 +1,56 @@
-# tracert-utility
-<h1>Windows 'tracert' utillity using C++, winsock2 and ICMP library</h1>
+<h1>Windows 'tracert' utillity using C++, winsock2 and ICMP library</h1> 
 
-Still need to improve, so this is WIP project
+(IPv4 only)
 
-<h3>Without command prompt</h3>
+<h2>To do:</h2>
+<ul>
+  <li>Improve comand prompt args handling</li>
+  <li>Refactor code so it looks more C++-like than C</li>
+  <li>Check all possible errors situations</li>
+</ul>
 
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/ee6a4f23-69f5-4b26-9bd0-b7eeffdb6197)
+<h2>Testing:</h2>
 
-<h3>With command prompt</h3>
-
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/350fe721-e844-41b3-97df-c0fd08419875)
-
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/739657e5-7830-4d67-9b9e-c14b8e08c2b7)
-
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/60731b09-adde-4178-b5fd-357c2e1fecd9)
-
-<h3>Wrong usage:</h3>
-
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/9bb7efce-3639-482c-afa0-ca9b13efbfa9)
-
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/1e891abc-20a5-44ab-849b-ecdd884f2642)
+'my_tracert' - is environment variable, a path to .exe file
 <br>
-(takes absolute value of -h parameter, same for timeout) <br>
-
-![image](https://github.com/eternalowo/tracert-utility/assets/98911288/417c85fb-7877-44fd-a097-b73f0494f76a)
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/e4f56143-7217-40ab-b7b0-41e76a941951)
 <br>
-(it also can be stopped by typing Ctrl+C, it will stop tracing after sending last packages, that were formed before Ctrl+C signal)
+<h4>Without flags</h4>
 
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/57d75de5-2ed1-45ab-8e05-f28b39802b49)
+<h4>With -h flag</h4>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/e398b262-fa03-4a47-a765-856da60e893b)
+<h4>With -w flag</h4>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/7c8433f0-fd52-4f6e-814e-60a2d713809c)
+<h4>With -d flag</h4>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/5a72ecec-3d69-44a4-871a-219549a73e20)
+<h4>With all flags</h4>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/de098cc5-7cf9-4f77-a87a-027c03f1d179)
+<h4>Using hostname that does not exists</h4>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/f0342986-8957-4e6c-bd75-54e71694d194)
+<h4>Uncorrect flag usage</h4>
+
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/cd36eacc-70c0-4ce1-8ff7-9965d8870b0e)
+![image](https://github.com/eternalowo/tracert-utility/assets/98911288/cdbee651-cd60-4cdb-b81d-7bed9ba09f91)
+
+well, thats it
+<br>
+<br>
+Resources:
+<br>
+https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
+<br>
+https://www.firewall.cx/networking/network-protocols/icmp-protocol/icmp-echo-ping.html
+<br>
+https://www.firewall.cx/networking/network-protocols/icmp-protocol/icmp-time-exceeded.html
+<br>
+https://learn.microsoft.com/en-us/windows/win32/api/icmpapi/nf-icmpapi-icmpsendecho
+<br>
+https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tracert
+<br>
+https://en.wikipedia.org/wiki/Traceroute
